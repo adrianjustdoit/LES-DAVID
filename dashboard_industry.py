@@ -1,5 +1,5 @@
 import streamlit as st
-import datetime
+
 
 # 1. Konfigurasi Halaman (Wajib diletakkan paling atas)
 # Mengatur tata letak web menjadi 'wide' agar lebih luas
@@ -74,9 +74,6 @@ elif menu == "Penjadwalan & Notifikasi WA":
         col1, col2 = st.columns(2)
         
         # Logika untuk mencari jam saat ini dan menambahkan 2 menit untuk testing
-        waktu_sekarang = datetime.datetime.now()
-        menit_testing = (waktu_sekarang.minute + 2) % 60
-        jam_testing = waktu_sekarang.hour if waktu_sekarang.minute + 2 < 60 else (waktu_sekarang.hour + 1) % 24
 
         with col1:
             jam_kirim = st.number_input("Jam (0-23)", min_value=0, max_value=23, value=jam_testing)
