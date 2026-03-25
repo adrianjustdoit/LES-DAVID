@@ -68,7 +68,7 @@ X_test_scaled = scaler.transform(X_test)
 # 4. Pemodelan dengan K-Nearest Neighbors (KNN)
 # Kita mulai dengan K=5 (mencari 5 tetangga terdekat)
 knn_model = KNeighborsClassifier(n_neighbors=5)
-knn_model.fit(X_train_scaled, y_train)
+KNeighborsClassifier(n_neighbors=5).fit(X_train_scaled, y_train)
 print("-> Tahap 4: Model KNN selesai dilatih.")
 
 # Melakukan prediksi pada data uji

@@ -1,5 +1,4 @@
 import streamlit as st
-import pywhatkit as kit
 import datetime
 
 # 1. Konfigurasi Halaman (Wajib diletakkan paling atas)
@@ -13,7 +12,7 @@ st.sidebar.title("⚙️ Navigasi Utama")
 st.sidebar.write("Silakan pilih menu aplikasi:")
 
 # Membuat pilihan menu menggunakan tombol radio
-menu = st.sidebar.radio("Daftar Menu", ["Kalkulator Bahan Baku", "Penjadwalan & Notifikasi WA"])
+menu = st.sidebar.radio("Daftar Menu", ["Kalkulator Bahan Baku", "Penjadwalan & Notifikasi WA","Penjadwalan Produksi"])
 
 st.sidebar.divider()
 st.sidebar.info("Dashboard ini dirancang untuk mendukung sistem Production Planning and Control (PPC).")
@@ -94,9 +93,18 @@ elif menu == "Penjadwalan & Notifikasi WA":
                 st.info(f"⏳ Jadwal diproses! Sistem akan membuka WhatsApp Web secara otomatis pada pukul {jam_kirim:02d}:{menit_kirim:02d}. JANGAN tutup web ini atau mematikan komputer.")
                 
                 try:
-                    kit.sendwhatmsg(no_wa, pesan_final, jam_kirim, menit_kirim, wait_time=15, tab_close=True, close_time=2)
                     st.success("✅ Pesan berhasil dikirim!")
                 except Exception as e:
                     st.error(f"⚠️ Terjadi kesalahan pada sistem pengiriman: {e}")
             else:
                 st.warning("⚠️ Mohon lengkapi Nama Pekerjaan dan pastikan Nomor WA sudah benar (minimal 10 angka).")
+
+# ==========================================
+# HALAMAN 3: PENJADWALAN PRODUKSI
+# ==========================================
+
+elif menu == "Penjadwalan Produksi":
+    st.title("📊 Penjadwalan Produksi")
+    st.write("Fitur ini akan segera hadir. Nantikan update selanjutnya!")
+    st.divider()
+    st.info("Fitur penjadwalan produksi akan memungkinkan Anda untuk mengatur timeline produksi, mengalokasikan sumber daya, dan memantau progres secara real-time.")       
