@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Integrated Production System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 32px;
+      letter-spacing: 2px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 30px 20px;
+      text-decoration: none;
+      color: white;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #22c55e;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      top: 0;
+      left: 0;
+      background: linear-gradient(90deg, #22c55e, #06b6d4);
+    }
+
+    .icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .desc {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 700px) {
+      .menu {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>⚙ Integrated Production System</h1>
+
+    <div class="menu">
+      <a href="/produksi" class="card">
+        <div class="icon">🏭</div>
+        <div class="title">Produksi</div>
+        <div class="desc">Monitoring & Output Produksi</div>
+      </a>
+
+      <a href="/shift" class="card">
+        <div class="icon">🕒</div>
+        <div class="title">Shift</div>
+        <div class="desc">Penjadwalan Karyawan</div>
+      </a>
+
+      <a href="/inventory" class="card">
+        <div class="icon">📦</div>
+        <div class="title">Inventory</div>
+        <div class="desc">Manajemen Stok Barang</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Penjadwalan Shift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    .nav {
+      background: #1e293b;
+      padding: 15px 30px;
+      text-align: center;
+      border-bottom: 1px solid #334155;
+    }
+
+    .nav a {
+      color: #a78bfa;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 80px);
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 30px;
+      width: 400px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .karyawan-inputs {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #0f172a;
+    }
+
+    input[type="text"] {
+      width: calc(100% - 60px);
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: white;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"]:focus {
+      border-color: #a78bfa;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button.btn-add {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      width: 50px;
+      height: 40px;
+    }
+
+    button.btn-add:hover {
+      background: #16a34a;
+    }
+
+    button.btn-remove {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      width: 50px;
+      height: 40px;
+    }
+
+    button.btn-remove:hover {
+      background: #dc2626;
+    }
+
+    button.btn-submit {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #a78bfa;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 16px;
+    }
+
+    button.btn-submit:hover {
+      background: #8b5cf6;
+    }
+
+    .result {
+      margin-top: 25px;
+    }
+
+    .shift-box {
+      background: #0f172a;
+      border: 2px solid #a78bfa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .shift-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #a78bfa;
+      font-size: 18px;
+    }
+
+    .karyawan-list {
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    .empty-shift {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        margin: 10px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <a href="/">🏠 Home</a>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>🕒 Penjadwalan Shift</h2>
+
+      <form method="POST" id="shiftForm">
+        <div class="karyawan-inputs" id="karyawanContainer">
+          <!-- Dynamic inputs will be here -->
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button type="button" class="btn-add" onclick="addKaryawan()">➕</button>
+          <button type="submit" class="btn-submit">⚙ Buat Jadwal</button>
+        </div>
+      </form>
+
+      {% if jadwal %}
+      <div class="result">
+        {% for shift_name, karyawan in jadwal.items() %}
+        <div class="shift-box">
+          <div class="shift-title">{{ shift_name }}</div>
+          {% if karyawan %}
+            <div class="karyawan-list">{{ karyawan | join(", ") }}</div>
+          {% else %}
+            <div class="empty-shift">Belum ada karyawan</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    let karyawanCount = 0;
+
+    function addKaryawan() {
+      karyawanCount++;
+      const container = document.getElementById('karyawanContainer');
+      const inputRow = document.createElement('div');
+      inputRow.className = 'input-row';
+      inputRow.innerHTML = `
+        <input type="text" name="nama[]" placeholder="Nama karyawan ${karyawanCount}" maxlength="50">
+        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">🗑️</button>
+      `;
+      container.appendChild(inputRow);
+    }
+
+    // Add initial 4 inputs
+    for(let i = 0; i < 4; i++) {
+      addKaryawan();
+    }
+
+    // Prevent empty form submission
+    document.getElementById('shiftForm').addEventListener('submit', function(e) {
+      const inputs = document.querySelectorAll('input[name="nama[]"]');
+      let hasValid = false;
+      inputs.forEach(input => {
+        if(input.value.trim()) hasValid = true;
+      });
+      if(!hasValid) {
+        e.preventDefault();
+        alert('Masukkan minimal 1 nama karyawan!');
+      }
+    });
+  </script>
+</body>
+</html>

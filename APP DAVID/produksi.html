@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitoring Produksi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    .nav {
+      background: #1e293b;
+      padding: 15px 30px;
+      text-align: center;
+      border-bottom: 1px solid #334155;
+    }
+
+    .nav a {
+      color: #06b6d4;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 80px);
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 30px;
+      width: 380px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .proses-inputs {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #0f172a;
+    }
+
+    input[type="number"] {
+      width: calc(100% - 60px);
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: white;
+      outline: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: #06b6d4;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    button.btn-add {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      width: 50px;
+      height: 40px;
+    }
+
+    button.btn-add:hover {
+      background: #16a34a;
+    }
+
+    button.btn-remove {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      width: 50px;
+      height: 40px;
+    }
+
+    button.btn-remove:hover {
+      background: #dc2626;
+    }
+
+    button.btn-submit {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #06b6d4;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 16px;
+    }
+
+    button.btn-submit:hover {
+      background: #0891b2;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid #22c55e;
+    }
+
+    .bottleneck {
+      color: #ef4444;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .efisiensi {
+      color: #22c55e;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .data-list {
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-family: monospace;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        margin: 10px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <a href="/">🏠 Home</a>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>🏭 Monitoring Produksi</h2>
+
+      <form method="POST" id="produksiForm">
+        <div class="proses-inputs" id="prosesContainer">
+          <!-- Dynamic inputs here -->
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button type="button" class="btn-add" onclick="addProses()">➕</button>
+          <button type="submit" class="btn-submit">⚙ Hitung</button>
+        </div>
+      </form>
+
+      {% if result %}
+      <div class="result">
+        <div class="bottleneck">🔴 Bottleneck: {{ result.bottleneck }} menit</div>
+        <div class="efisiensi">🟢 Efisiensi: {{ result.efisiensi }}%</div>
+        <div class="data-list">
+          Waktu proses: {{ result.data | join(', ') }} menit
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    let prosesCount = 0;
+
+    function addProses() {
+      prosesCount++;
+      const container = document.getElementById('prosesContainer');
+      const inputRow = document.createElement('div');
+      inputRow.className = 'input-row';
+      inputRow.innerHTML = `
+        <input type="number" name="waktu[]" placeholder="Proses ${prosesCount} (menit)" min="1" max="999" step="0.1">
+        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">🗑️</button>
+      `;
+      container.appendChild(inputRow);
+    }
+
+    // Initial 3 processes
+    for(let i = 0; i < 3; i++) {
+      addProses();
+    }
+
+    // Form validation
+    document.getElementById('produksiForm').addEventListener('submit', function(e) {
+      const inputs = document.querySelectorAll('input[name="waktu[]"]');
+      let valid = true;
+      inputs.forEach(input => {
+        const val = parseFloat(input.value);
+        if (isNaN(val) || val <= 0) {
+          valid = false;
+        }
+      });
+      if (!valid || inputs.length === 0) {
+        e.preventDefault();
+        alert('Masukkan waktu proses yang valid (>0) untuk minimal 1 proses!');
+      }
+    });
+  </script>
+</body>
+</html>

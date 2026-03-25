@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    .nav {
+      background: #1e293b;
+      padding: 15px 30px;
+      text-align: center;
+      border-bottom: 1px solid #334155;
+    }
+
+    .nav a {
+      color: #22c55e;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 80px);
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 30px;
+      width: 340px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: white;
+      outline: none;
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: #22c55e;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #22c55e;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #16a34a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .result.safe {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid #22c55e;
+    }
+
+    .result.reorder {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid #ef4444;
+    }
+
+    .rop {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .status.safe {
+      background: #22c55e;
+      color: white;
+    }
+
+    .status.reorder {
+      background: #ef4444;
+      color: white;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        margin: 10px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <a href="/">🏠 Home</a>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>📦 Inventory Control</h2>
+
+      <form method="POST" id="inventoryForm">
+        <div class="form-group">
+          <input type="number" name="stok" placeholder="Stok saat ini" min="0" step="1">
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="demand" placeholder="Demand per hari" min="1" step="1">
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="lead_time" placeholder="Lead Time (hari)" min="1" step="1">
+        </div>
+
+        <button type="submit">⚙ Hitung ROP</button>
+      </form>
+
+      {% if rop is not none %}
+      <div class="result {{ 'safe' if status == '🟢 Aman' else 'reorder' }}">
+        <div class="rop">ROP: {{ rop }}</div>
+        <div class="status {{ 'safe' if status == '🟢 Aman' else 'reorder' }}">{{ status }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('inventoryForm').addEventListener('submit', function(e) {
+      const stok = parseFloat(document.querySelector('input[name="stok"]').value);
+      const demand = parseFloat(document.querySelector('input[name="demand"]').value);
+      const lead = parseFloat(document.querySelector('input[name="lead_time"]').value);
+      
+      if (isNaN(stok) || isNaN(demand) || isNaN(lead) || demand <= 0 || lead <= 0) {
+        e.preventDefault();
+        alert('Masukkan nilai valid: Stok ≥0, Demand & Lead Time >0!');
+        return;
+      }
+    });
+  </script>
+</body>
+</html>
